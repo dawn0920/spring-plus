@@ -30,6 +30,8 @@ public class TodoController {
     // 문제!  연결이 읽기 전용으로 되어있기 때문에 데이터 수정인 퀘리 삽입이 이루어지지 않음
     // 해결! TodoService에 @Transactional(readOnly = true) 설정을 각 메소드마다 다르게 변경
     // ex) saveTodo - @Transactional / getTodos - @Transactional(readOnly = true)
+    // 추가 정보 - (readOnly = true) 를 붙이는 것이 Flush 수행을 하지 않기 때문에 SQL 검사가 줄어듬
+    // -> 즉 성능 향상 + 의도 명확성이 올라간다/
     @PostMapping("/todos")
     public ResponseEntity<TodoSaveResponse> saveTodo(
             @Auth AuthUser authUser,
