@@ -18,6 +18,18 @@ public class TodoController {
 
     private final TodoService todoService;
 
+
+    // 할 일 저장 기능을 구현한 API(/todos)를 호출할 때, 아래와 같은 에러가 발생
+    /*
+    jakarta.servlet.ServletException: Request processing failed:
+    org.springframework.orm.jpa.JpaSystemException: could not execute statement
+    [Connection is read-only. Queries leading to data modification are not allowed]
+    [insert into todos (contents,created_at,modified_at,title,user_id,weather)
+    values (?,?,?,?,?,?)]
+    */
+    // 문제!  연결이 읽기 전용으로 되어있기 때문에 데이터 수정인 퀘리 삽입이 이루어지지 않음
+    // 해결! TodoService에 @Transactional(readOnly = true) 설정을 각 메소드마다 다르게 변경
+    // ex) saveTodo - @Transactional / getTodos - @Transactional(readOnly = true)
     @PostMapping("/todos")
     public ResponseEntity<TodoSaveResponse> saveTodo(
             @Auth AuthUser authUser,
