@@ -41,6 +41,27 @@ dependencies {
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+    // QueryDSL
+//    implementation 'com.querydsl:querydsl-jpa'
+//    annotationProcessor 'com.querydsl:querydsl-apt'
+    // Spring Boot 3.x 이상을 쓰면 Jakarta 패키지 버전을 써야 함
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+
+}
+
+// build/generated/querydsl 폴더에 저장
+def querydslDir = "$buildDir/generated/querydsl"
+
+sourceSets {
+    main.java.srcDirs += querydslDir
+}
+
+// QueryDSL annotation processor에게 “여기에 Q 클래스를 생성하라”고 지정
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
 }
 
 tasks.named('test') {
